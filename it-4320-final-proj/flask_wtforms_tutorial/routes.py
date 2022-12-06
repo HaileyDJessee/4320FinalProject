@@ -44,15 +44,23 @@ def admin():
 def reservations():
 
     form = ReservationForm()
-
+    seating_matrix = [['O','O','O','O'] for row in range(12)]
+    matrix = seating_matrix
+    with open("reservations.txt", "r+") as file:
+            print(file.tell())
+            for line in file:
+                sub = line
+                subsub = sub.split(', ')
+                matrix[int(subsub[1])][int(subsub[2])] = 'X'
     if request.method == 'POST' and form.validate_on_submit():
         first_name = request.form['first_name']
         row = request.form['row']
         seat = request.form['seat']
         len1 = len(first_name)
-        classstring ='INFOTC4320'
+        classstring ='INFOTC1040'
         len2 = len(classstring)
-        seatingticket = ""
+        seatingticket = ''
+        ticketcheck = (str(int(row)-1) + ', ' + str(int(seat)-1))
         if len2 > len1:
             for i in range(len1):
                 seatingticket += first_name[i]
@@ -66,8 +74,29 @@ def reservations():
                         seatingticket += classstring[i]
                 except:
                     break
-        ticketstring = ('\n' +first_name + ', '+ row +', '+ seat + ', ' + seatingticket)
-        with open('reservations.txt', 'a') as res:
-            res.writelines(ticketstring)
-    return render_template("reservations.html", form=form, template="form-template")
+        ticketstring = ('\n' +first_name + ', '+ str(int(row)-1) +', '+ str(int(seat)-1) + ', ' + seatingticket)
+        ticket = seatingticket
+        err = None
+        reservationfound = False
+        ticketcheck = (str(int(row)-1) + ', ' + str(int(seat)-1))
+        with open('reservations.txt', 'r') as file:
+            for line in file:
+                sub = line
+                if ticketcheck in sub:
+                    ticket = None
+                    reservationfound = True
+                    break
+        if reservationfound == True:
+            err = "The seat your requested has already been reserved please choose another seat"
+        else:
+            with open('reservations.txt', 'a') as res:
+                res.writelines(ticketstring)
+        with open("reservations.txt", "r+") as file:
+            for line in file:
+                sub = line
+                subsub = sub.split(', ')
+                matrix[int(subsub[1])][int(subsub[2])] = 'X'
+        return render_template("reservations.html", form=form, ticket = ticket, row = row, seat = seat, first_name = first_name, matrix = seating_matrix, err = err, template="form-template")
+                        
+    return render_template("reservations.html", form=form, matrix = seating_matrix, template="form-template")
 
