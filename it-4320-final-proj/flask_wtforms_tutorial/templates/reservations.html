@@ -7,6 +7,11 @@
 {% block content %}
 <div class="formwrapper">
   <h2 class="title">Reserve Your Seat</h2>
+  <p>{{ matrix }}</p>
+  {% if ticket %}
+        <p> Congratulations {{ first_name }}! Row:{{ row }} Seat:{{ seat }} is now reserved for you! Enjoy your trip! </p>
+        <p> Your e-ticket number is: {{ ticket }}</p>
+  {% endif %}
   {% if err %}
         <p>{{ err }}</p>
   {% endif %}
