@@ -8,7 +8,5 @@ F. Display a flight chart
 
 G. Calculate and get the total sales for the flight when the user successfully logs in as an admin
 
-H. Create and print a reservation code for the user when the user successfully makes a reservation 
-Justice
 J. Each page should have a link to the main option page.
 Shawn
