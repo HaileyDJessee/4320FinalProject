@@ -36,15 +36,12 @@ def admin():
             else:
                 err = "ERROR: username and password combination not found please check entries and resubmit."
                 return render_template("admin.html", form=form, err = err, template="form-template")
-
-
     return render_template("admin.html", form=form, template="form-template")
-
 @app.route("/reservations", methods=['GET', 'POST'])
 def reservations():
 
     form = ReservationForm()
-    seating_matrix = [['O','O','O','O'] for row in range(12)]
+    seating_matrix = [['O','O','O','O']  for row in range(12)]
     matrix = seating_matrix
     with open("reservations.txt", "r+") as file:
             print(file.tell())
@@ -96,7 +93,7 @@ def reservations():
                 sub = line
                 subsub = sub.split(', ')
                 matrix[int(subsub[1])][int(subsub[2])] = 'X'
-        return render_template("reservations.html", form=form, ticket = ticket, row = row, seat = seat, first_name = first_name, matrix = seating_matrix, err = err, template="form-template")
+        return render_template("reservations.html", form=form, ticket = ticket, row = row, seat = seat, first_name = first_name, matrix = '\n'.join(map(str, seating_matrix)), err = err, template="form-template")
                         
-    return render_template("reservations.html", form=form, matrix = seating_matrix, template="form-template")
+    return render_template("reservations.html", form=form, matrix = '\n'.join(map(str, seating_matrix)), template="form-template")
 
