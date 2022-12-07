@@ -84,7 +84,7 @@ def reservations():
                     reservationfound = True
                     break
         if reservationfound == True:
-            err = "The seat your requested has already been reserved please choose another seat"
+            err = "The seat your requested has already been reserved please choose another seat."
         else:
             with open('reservations.txt', 'a') as res:
                 res.writelines(ticketstring)
