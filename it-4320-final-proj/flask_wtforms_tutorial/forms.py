@@ -12,14 +12,7 @@ from wtforms.validators import DataRequired
 
 class UserOptionForm(FlaskForm):
     """Generate Your Graph."""
-    '''
-    Function to generate cost matrix for flights
-    Input: none
-    Output: Returns a 12 x 4 matrix of prices
-    '''
-    def get_cost_matrix():
-        cost_matrix = [[100, 75, 50, 100] for row in range(12)]
-        return cost_matrix
+    
     #THIS IS WHERE YOU WILL IMPLEMENT CODE TO POPULATE THE SYMBOL FIELD WITH STOCK OPTIONS
     option = SelectField("Choose an Option",[DataRequired()],
         choices=[
@@ -33,8 +26,7 @@ class UserOptionForm(FlaskForm):
 
 
 class ReservationForm(FlaskForm):
-    """Reservation Form"""
-    
+    """Reservation Form""" 
     #THIS IS WHERE YOU WILL IMPLEMENT CODE TO POPULATE THE SYMBOL FIELD WITH STOCK OPTIONS
     first_name = StringField('First Name', [DataRequired()])
     last_name = StringField('Last Name', [DataRequired()])
@@ -64,7 +56,6 @@ class ReservationForm(FlaskForm):
             ("4", "4"),
         ],
     )
-
     reserve = SubmitField("Reserve a Seat")
 
 class AdminLoginForm(FlaskForm):
