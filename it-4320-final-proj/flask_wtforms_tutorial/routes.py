@@ -23,18 +23,34 @@ def user_options():
 def admin():
 
     form = AdminLoginForm()
-
+    seating_matrix = [['O','O','O','O']  for row in range(12)]
+    matrix = seating_matrix
     if request.method == 'POST' and form.validate_on_submit():
         username = request.form['username']
         password = request.form['password']
 
+        
         with open('passcodes.txt') as f:
             check = f.read()
             if (username + ', ' + password) in check:
-                err = 'found user and password'
-                return render_template("admin.html", form=form, err = err, template="form-template")
+                cost_matrix = [[100, 75, 50, 100] for row in range(12)]
+                sales = 0
+                with open("reservations.txt", "r+") as file:
+                    print(file.tell())
+                    for line in file:
+                        lineholder= line
+                        seatinglocation = lineholder.split(', ')
+                        salessub=  cost_matrix[int(seatinglocation[1])][int(seatinglocation[2])]
+                        sales += salessub
+                with open("reservations.txt", "r+") as file:
+                        print(file.tell())
+                        for line in file:
+                            lineholder= line
+                            seatinglocation = lineholder.split(', ')
+                            matrix[int(seatinglocation[1])][int(seatinglocation[2])] = 'X'
+                return render_template("admin.html", form=form, sales = sales, matrix = '\n'.join(map(str, seating_matrix)), template="form-template")
             else:
-                err = "ERROR: username and password combination not found please check entries and resubmit."
+                err = "Bad username/password combination. Try Again"
                 return render_template("admin.html", form=form, err = err, template="form-template")
     return render_template("admin.html", form=form, template="form-template")
 @app.route("/reservations", methods=['GET', 'POST'])
@@ -46,9 +62,9 @@ def reservations():
     with open("reservations.txt", "r+") as file:
             print(file.tell())
             for line in file:
-                sub = line
-                subsub = sub.split(', ')
-                matrix[int(subsub[1])][int(subsub[2])] = 'X'
+                lineholder= line
+                seatinglocation = lineholder.split(', ')
+                matrix[int(seatinglocation[1])][int(seatinglocation[2])] = 'X'
     if request.method == 'POST' and form.validate_on_submit():
         first_name = request.form['first_name']
         row = request.form['row']
@@ -78,41 +94,22 @@ def reservations():
         ticketcheck = (str(int(row)-1) + ', ' + str(int(seat)-1))
         with open('reservations.txt', 'r') as file:
             for line in file:
-                sub = line
-                if ticketcheck in sub:
+                lineholder = line
+                if ticketcheck in lineholder:
                     ticket = None
                     reservationfound = True
                     break
         if reservationfound == True:
-            err = "The seat your requested has already been reserved please choose another seat."
+            err = "ERROR!"
         else:
             with open('reservations.txt', 'a') as res:
                 res.writelines(ticketstring)
         with open("reservations.txt", "r+") as file:
             for line in file:
-                sub = line
-                subsub = sub.split(', ')
-                matrix[int(subsub[1])][int(subsub[2])] = 'X'
+                lineholder= line
+                seatinglocation = lineholder.split(', ')
+                matrix[int(seatinglocation[1])][int(seatinglocation[2])] = 'X'
         return render_template("reservations.html", form=form, ticket = ticket, row = row, seat = seat, first_name = first_name, matrix = '\n'.join(map(str, seating_matrix)), err = err, template="form-template")
                         
     return render_template("reservations.html", form=form, matrix = '\n'.join(map(str, seating_matrix)), template="form-template")
-
-
-def calculateTotal():
-    seating_matrix = [['O','O','O','O']  for row in range(12)]
-    matrix = seating_matrix
-    with open("reservations.txt", "r+") as file:
-            print(file.tell())
-            for line in file:
-                sub = line
-                subsub = sub.split(', ')
-                matrix[int(subsub[1])][int(subsub[2])] = 'X'
-    cost_matrix = [[100, 75, 50, 100] for row in range(12)]
-    total = 0
-    for row in matrix:
-        for seat in row:
-            if matrix[row][seat] == "X":
-                total = total + cost_matrix[row][seat]
-    return total
-
 
