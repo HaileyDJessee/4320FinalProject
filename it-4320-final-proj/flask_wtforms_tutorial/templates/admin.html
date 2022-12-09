@@ -6,9 +6,15 @@
 
 {% block content %}
 <div class="formwrapper">
+  <div.a class="link"><a href="http://localhost:5002/">Home</a> | <a href="http://localhost:5002/admin">Admin</a> | <a href="http://localhost:5002/reservations">Reservations</a></div.a>
   <h2 class="title">Administrator Login</h2>
+  {% if sales %}
+        <p>Printing Seating Chart...</p>
+        <p class="container2">{{ matrix }}</p>
+        <p>Total Sales: {{ sales }}</p>
+  {% endif %}
   {% if err %}
-        <p>{{ err }}</p>
+        <p class="errortext"><b>{{ err }}</b></p>
   {% endif %}
   <form method="POST" action="/admin">
       {{ form.csrf_token }}
