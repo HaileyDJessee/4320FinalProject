@@ -13,6 +13,12 @@ form {
   display: flex;
   justify-content: space-around;
 }
+.link {
+  margin-right: 130px;
+  position: relative;
+  padding-right: 85px;
+  left: 60%;
+}
 .container2 {
   background:lightgray;
   border-radius: 10px;
