@@ -97,3 +97,22 @@ def reservations():
                         
     return render_template("reservations.html", form=form, matrix = '\n'.join(map(str, seating_matrix)), template="form-template")
 
+
+def calculateTotal():
+    seating_matrix = [['O','O','O','O']  for row in range(12)]
+    matrix = seating_matrix
+    with open("reservations.txt", "r+") as file:
+            print(file.tell())
+            for line in file:
+                sub = line
+                subsub = sub.split(', ')
+                matrix[int(subsub[1])][int(subsub[2])] = 'X'
+    cost_matrix = [[100, 75, 50, 100] for row in range(12)]
+    total = 0
+    for row in matrix:
+        for seat in row:
+            if matrix[row][seat] == "X":
+                total = total + cost_matrix[row][seat]
+    return total
+
+
